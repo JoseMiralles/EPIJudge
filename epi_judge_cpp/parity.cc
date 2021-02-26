@@ -20,7 +20,8 @@ short ParityNaive(unsigned long long x) {
 
 }
 
-short Parity(unsigned long long x) {
+// O(k), k = number of ones in the bit word.
+short ParityOK(unsigned long long x) {
 
 	short result = 0;
 
@@ -33,6 +34,29 @@ short Parity(unsigned long long x) {
 
 	return result;
 
+}
+
+/// The efficient solution.
+/*
+	The parity of 11010111 is the same as the parity
+	of the result of 1101 XOR 0111, which is 1010.
+	Then, the parity of 1010 is the same as the parity of
+	the result of 10 XOR 10, which is 00.
+	The parity of 00 is 0.
+
+	This means that the parity of 11010111 is 0.
+*/
+// O(log n)
+short Parity(unsigned long long x) {
+	// Example: x = 11010111
+					// x = x XOR shifted = result
+	x ^= x >> 32;	// x = 11010111 ^ 0 = 11010111
+	x ^= x >> 16;	// x = 11010111 ^ 0 = 11010111
+	x ^= x >> 8;	// x = 11010111 ^ 0 = 11010111
+	x ^= x >> 4;	// x = 11010111 ^ 1101 = 11011010
+	x ^= x >> 2;	// x = 11011010 ^ 110110 = 11101100
+	x ^= x >> 1;	// x = 11101100 ^ 1110110 = 10011010
+	return x & 0x1;
 }
 
 int main(int argc, char* argv[]) {
